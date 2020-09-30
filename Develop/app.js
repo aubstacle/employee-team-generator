@@ -9,6 +9,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { create } = require("domain");
 
 const employees = [];
 
@@ -27,6 +28,13 @@ function newEmployee() {
       if (data.newEmployee) {
         promptEmployee();
       } else {
+        const createdPage = render(employees);
+        fs.writeFile(outputPath, createdPage, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+          console.log("You successfully generated your team's page!");
+        });
       }
     })
     .catch(function () {

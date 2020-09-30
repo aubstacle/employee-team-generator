@@ -10,29 +10,156 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const employees = []
+const employees = [];
 
-function promptEmployee() {
-    inquirer.prompt([
-        {
-            name: "name",
-            message: "Enter your name:",
-            type: "input"
-        },
-        {
-            name: "id",
-            message: "Enter your ID:",
-            type: "input"
-        },
-        {
-            name: "name",
-            message: "Enter your email:",
-            type: "input"
-        },
-    ])
-}
 promptEmployee();
 
+function newEmployee() {
+  inquirer
+    .prompt([
+      {
+        name: "newEmployee",
+        message: "Do you want to add another employee?",
+        type: "confirm",
+      },
+    ])
+    .then(function (data) {
+      if (data.newEmployee) {
+        promptEmployee();
+      } else {
+      }
+    })
+    .catch(function () {
+      if (err) throw err;
+    });
+}
+
+function promptEmployee() {
+  console.log(employees);
+  inquirer
+    .prompt([
+      {
+        name: "employee",
+        message: "Select your occupation:",
+        type: "list",
+        choices: ["Intern", "Manager", "Engineer"],
+      },
+    ])
+    .then(function (data) {
+      if (data.employee === "Engineer") {
+        engineerResponse();
+      } else if (data.employee === "Intern") {
+        internResponse();
+      } else {
+        managerResponse();
+      }
+    })
+    .catch(function () {
+      if (err) throw err;
+    });
+}
+
+function internResponse() {
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        message: "Enter your name:",
+        type: "input",
+      },
+      {
+        name: "id",
+        message: "Enter your ID:",
+        type: "input",
+      },
+      {
+        name: "email",
+        message: "Enter your email:",
+        type: "input",
+      },
+      {
+        name: "school",
+        message: "Enter your school name:",
+        type: "input",
+      },
+    ])
+    .then(function (ans) {
+      const intern = new Intern(ans.name, ans.id, ans.email, ans.school);
+      employees.push(intern);
+      newEmployee();
+    })
+    .catch(function () {
+      if (err) throw err;
+    });
+}
+
+function engineerResponse() {
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        message: "Enter your name:",
+        type: "input",
+      },
+      {
+        name: "id",
+        message: "Enter your ID:",
+        type: "input",
+      },
+      {
+        name: "email",
+        message: "Enter your email:",
+        type: "input",
+      },
+      {
+        name: "github",
+        message: "Enter your github username:",
+        type: "input",
+      },
+    ])
+    .then(function (ans) {
+      const engineer = new Engineer(ans.name, ans.id, ans.email, ans.github);
+      employees.push(engineer);
+      newEmployee();
+    })
+    .catch(function () {
+      if (err) throw err;
+    });
+}
+
+function managerResponse() {
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        message: "Enter your name:",
+        type: "input",
+      },
+      {
+        name: "id",
+        message: "Enter your ID:",
+        type: "input",
+      },
+      {
+        name: "email",
+        message: "Enter your email:",
+        type: "input",
+      },
+      {
+        name: "officeNum",
+        message: "Enter your office number:",
+        type: "input",
+      },
+    ])
+    .then(function (ans) {
+      const manager = new Manager(ans.name, ans.id, ans.email, ans.officeNum);
+      employees.push(manager);
+      newEmployee();
+    })
+    .catch(function () {
+      if (err) throw err;
+    });
+}
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
